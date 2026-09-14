@@ -475,6 +475,12 @@
     }
   }
 
+  function upload(){
+    if(!matrices || !mesh) return;
+    mesh.instanceMatrix.array.set(matrices);
+    mesh.instanceMatrix.needsUpdate = true;
+  }
+
   // ---------- resize ----------
   function resize(){
     var w = canvas.clientWidth, h = canvas.clientHeight;
@@ -496,7 +502,10 @@
     last = now;
     if(!reduce) t += dt;
 
+    // 워커 모드에서는 버퍼 소유권을 워커로 넘기는 순간 matrices가 비므로,
+    // 넘기기 전에 지금 들고 있는 행렬을 먼저 인스턴스 버퍼에 올린다.
     if(MODE === 'worker' && worker && workerOk){
+      upload();
       if(!workerBusy && elements && matrices){
         workerBusy = true;
         var el = elements, out = matrices;
@@ -505,11 +514,7 @@
       }
     }else if(elements && matrices){
       PROPAGATE(elements, matrices, COUNT, t);
-    }
-
-    if(matrices && mesh){
-      mesh.instanceMatrix.array.set(matrices);
-      mesh.instanceMatrix.needsUpdate = true;
+      upload();
     }
 
     core.rotation.y = t*0.06;
