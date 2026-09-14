@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강동인 — Frontend Engineer</title>
+<meta name="description" content="대량 실시간 렌더링과 사내 라이브러리를 만드는 프론트엔드 개발자 강동인의 작업 기록.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF0EC;
+    --paper-2:#E4E7E2;
+    --ink:#16202B;
+    --ink-soft:#4A5763;
+    --rule:#C7CDC6;
+    --accent:#1B4FA8;
+    --panel:#0D1620;
+    --panel-2:#16222E;
+    --signal:#7FD4C1;
+    --measure:66ch;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans KR",system-ui,sans-serif;
+    font-weight:400;
+    font-size:17px;
+    line-height:1.72;
+    word-break:keep-all;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 28px;}
+
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(27,79,168,.32);}
+  a:hover{border-bottom-color:var(--accent);}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+  /* ---- masthead ---- */
+  header{padding:64px 0 0;}
+  .whoami{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;}
+  .whoami h1{
+    font-size:20px;font-weight:600;letter-spacing:-0.01em;margin:0;
+  }
+  .whoami h1 span{font-weight:300;color:var(--ink-soft);margin-left:10px;}
+  .links{font-size:15px;}
+  .links a{margin-left:18px;}
+  .links a:first-child{margin-left:0;}
+
+  .lede{
+    margin:52px 0 8px;
+    font-size:clamp(27px,4.4vw,40px);
+    line-height:1.34;
+    font-weight:500;
+    letter-spacing:-0.02em;
+    max-width:19ch;
+  }
+  .lede-sub{
+    margin:0 0 34px;
+    color:var(--ink-soft);
+    max-width:var(--measure);
+  }
+
+  /* ---- instrument ---- */
+  .instrument{
+    background:var(--panel);
+    border-radius:3px;
+    overflow:hidden;
+    position:relative;
+  }
+  #scene{display:block;width:100%;height:420px;}
+  .readout{
+    position:absolute;top:0;right:0;
+    padding:16px 18px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;
+    color:var(--signal);
+    text-align:right;
+    line-height:1.85;
+    pointer-events:none;
+  }
+  .readout b{font-weight:500;color:#fff;font-size:17px;}
+  .readout i{font-style:normal;color:#6C8296;}
+
+  .controls{
+    display:flex;flex-wrap:wrap;gap:26px;
+    padding:14px 18px;
+    background:var(--panel-2);
+    border-top:1px solid rgba(255,255,255,.07);
+  }
+  .ctrl{display:flex;align-items:center;gap:9px;}
+  .ctrl > span{
+    font-size:13px;color:#8FA2B2;
+  }
+  .seg{display:flex;border:1px solid rgba(255,255,255,.16);border-radius:2px;overflow:hidden;}
+  .seg button{
+    appearance:none;background:transparent;border:0;
+    color:#B9C7D2;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;
+    padding:5px 13px;cursor:pointer;
+    border-left:1px solid rgba(255,255,255,.13);
+  }
+  .seg button:first-child{border-left:0;}
+  .seg button[aria-pressed="true"]{background:var(--signal);color:#07121A;font-weight:500;}
+  .caption{
+    margin:14px 0 0;
+    font-size:15px;
+    color:var(--ink-soft);
+    max-width:var(--measure);
+  }
+  .warn{color:#A6462B;}
+
+  /* ---- sections ---- */
+  section{
+    padding:78px 0 0;
+  }
+  section + section{margin-top:78px;border-top:1px solid var(--rule);}
+  h2{
+    font-size:25px;font-weight:600;letter-spacing:-0.015em;
+    margin:0 0 6px;line-height:1.42;max-width:26ch;
+  }
+  .where{
+    font-size:14px;color:var(--ink-soft);margin:0 0 26px;
+  }
+  h3{
+    font-size:15px;font-weight:600;margin:30px 0 6px;
+  }
+  p{max-width:var(--measure);margin:0 0 15px;}
+  .dim{color:var(--ink-soft);}
+
+  pre{
+    background:var(--panel);
+    color:#CBD6DF;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:13px;
+    line-height:1.7;
+    padding:18px 20px;
+    border-radius:3px;
+    overflow-x:auto;
+    margin:22px 0;
+  }
+  pre .c{color:#6C8296;}
+  pre .k{color:var(--signal);}
+
+  .todo{
+    border-left:3px solid #C08A2E;
+    background:#F4EEDF;
+    padding:14px 18px;
+    margin:22px 0;
+    font-size:15px;
+  }
+  .todo p{margin:0;}
+
+  /* ---- career ---- */
+  .career{width:100%;border-collapse:collapse;margin-top:8px;font-size:16px;}
+  .career td{padding:9px 0;border-bottom:1px solid var(--rule);vertical-align:baseline;}
+  .career td:first-child{
+    width:130px;color:var(--ink-soft);
+    font-family:"IBM Plex Mono",monospace;font-size:13px;
+    white-space:nowrap;padding-right:16px;
+  }
+  .career td:last-child{color:var(--ink-soft);text-align:right;font-size:14px;white-space:nowrap;}
+  .career .co{font-weight:500;color:var(--ink);}
+
+  footer{
+    padding:64px 0 90px;
+    color:var(--ink-soft);font-size:15px;
+  }
+  footer a{margin-right:18px;}
+
+  @media (max-width:620px){
+    body{font-size:16px;}
+    .wrap{padding:0 20px;}
+    #scene{height:320px;}
+    .controls{gap:16px;}
+    .career td:first-child{width:96px;}
+    .career td:last-child{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <div class="whoami">
+    <h1>강동인<span>Frontend Engineer</span></h1>
+    <div class="links">
+      <a href="https://github.com/did0824">GitHub</a>
+      <a href="mailto:did0824@naver.com">did0824@naver.com</a>
+    </div>
+  </div>
+
+  <p class="lede">5만 개를 끊김 없이 그리는 일, 그리고 그걸 남이 쓰게 만드는 일.</p>
+  <p class="lede-sub">7년 8개월간 프론트엔드와 백엔드를 함께 다뤘습니다. 지금은 스페이스맵에서 개발팀 7명을 리드하며, 수만 기의 위성 궤도를 실시간으로 계산해 화면에 올리는 제품과 그것을 만드는 데 쓰이는 사내 도구를 함께 만들고 있습니다.</p>
+</header>
+
+<div class="instrument">
+  <canvas id="scene"></canvas>
+  <div class="readout">
+    <div><b id="fps">—</b> fps</div>
+    <div><i>frame</i> <span id="ms">—</span> ms</div>
+    <div><i>objects</i> <span id="cnt">—</span></div>
+  </div>
+  <div class="controls">
+    <div class="ctrl">
+      <span>객체 수</span>
+      <div class="seg" id="segCount">
+        <button data-n="3000" aria-pressed="false">3,000</button>
+        <button data-n="12000" aria-pressed="true">12,000</button>
+        <button data-n="30000" aria-pressed="false">30,000</button>
+      </div>
+    </div>
+    <div class="ctrl">
+      <span>궤도 계산 위치</span>
+      <div class="seg" id="segMode">
+        <button data-mode="main" aria-pressed="true">메인 스레드</button>
+        <button data-mode="worker" aria-pressed="false">워커</button>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="caption" id="caption">지금 이 페이지에서 실제로 도는 데모입니다. 객체 수를 30,000으로 올리고 계산 위치를 바꿔보면 차이가 보입니다. <span id="fallback"></span></p>
+
+<section>
+  <h2>같은 화면을 여섯 번 만들고 있었습니다</h2>
+  <p class="where">스페이스맵 · 사내 컴포넌트 라이브러리</p>
+
+  <p>여섯 개 서비스가 각자 React Three Fiber 기반 위성 시각화 UI를 따로 구현하고 있었습니다. 같은 기능이 서비스마다 다르게 동작했고, 한 곳에서 고친 내용이 다른 곳으로 넘어가지 않았습니다. 버그 하나를 여섯 번 고치는 상황이었습니다.</p>
+
+  <h3>어디까지 열어줄 것인가</h3>
+  <p>반복되는 시각화 UI를 React 컴포넌트로 묶어 <span class="dim">digital-twin-package</span>로 만들었습니다. 이때 가장 오래 고민한 건 컴포넌트 목록이 아니라 <strong>인터페이스의 폭</strong>이었습니다.</p>
+  <p>three.js 인스턴스나 렌더 루프를 밖으로 노출하면 당장은 편합니다. 쓰는 쪽이 뭐든 할 수 있으니까요. 하지만 그 순간 내부 구현이 곧 공개 API가 되어, 안쪽을 고칠 때마다 여섯 개 서비스가 깨집니다. 그래서 <strong>props만으로 제어하는 선언적 인터페이스</strong>로 좁혔습니다. 쓰는 쪽은 3D 렌더링 내부를 몰라도 되고, 저는 안쪽을 자유롭게 바꿀 수 있습니다.</p>
+
+  <pre><span class="c">// 쓰는 쪽이 보는 전부. 워커도, 렌더 루프도, 버퍼도 보이지 않습니다.</span>
+&lt;<span class="k">Scene</span> dimension="3D" coordinateSystem="ECI"&gt;
+  &lt;<span class="k">TleRso</span>
+    rsoData={{ name: 'starlink', data: tles, color: '#4cc9f0', orbit: true }}
+    handleRsoClick={(sat) =&gt; select(sat)}
+  /&gt;
+  &lt;<span class="k">RsoTag</span> groupName="starlink" noradId={44713} position="best" tail&gt;
+    STARLINK-1007
+  &lt;/<span class="k">RsoTag</span>&gt;
+&lt;/<span class="k">Scene</span>&gt;</pre>
+
+  <h3>틀린 조합은 컴파일에서 막습니다</h3>
+  <p>센서의 시야각 컴포넌트가 좋은 예입니다. 원뿔이면 대각 화각 하나를, 사각뿔이면 수평·수직 화각 두 개를 받습니다. 섞어 쓰면 의미가 없는데, 이걸 런타임 경고로 처리하면 쓰는 사람은 화면이 이상해진 뒤에야 알게 됩니다.</p>
+  <pre><span class="c">// 둘 중 하나만. 섞으면 타입 에러.</span>
+&lt;<span class="k">Cone</span> dfov={30} /&gt;                <span class="c">// 원뿔</span>
+&lt;<span class="k">Cone</span> hfov={20} vfov={10} /&gt;      <span class="c">// 사각뿔</span>
+&lt;<span class="k">Cone</span> dfov={30} hfov={20} /&gt;      <span class="c">// ✗ 컴파일 실패</span></pre>
+  <p>각도 단위도 전체 각으로 통일하고 유효 범위 밖은 잘라냅니다. 문서에 &ldquo;주의하세요&rdquo;라고 적는 대신 타입으로 막는 편이 낫습니다. 문서는 안 읽히지만 컴파일러는 항상 돕니다.</p>
+
+  <h3>조용히 깨지는 것들을 적어뒀습니다</h3>
+  <p>시그니처만으로는 드러나지 않는 규약이 있습니다. 그룹 이름은 앱 전체에서 고유해야 하고, 카메라 모드는 서로 배타적이며, 매 프레임 뒤집히는 값은 구독하면 안 되고 명령형으로 읽어야 합니다. 어기면 에러가 나는 게 아니라 조용히 이상해집니다.</p>
+  <p>그래서 API 문서와 별도로 <strong>호출 규약 항목을 따로 뒀습니다.</strong> 쓰는 사람이 디버깅으로 알아내야 할 것을 미리 적어두는 편이 낫습니다.</p>
+
+  <h3>모노레포를 쓰지 않기로 했습니다</h3>
+  <p>패키지가 늘어나면 모노레포를 떠올리는 게 자연스럽습니다. 도입하지 않았습니다. 서비스별 릴리스 주기가 서로 독립적이었고, 소비하는 쪽 중에는 폐쇄망에 반입되는 제품도 있어 배포 경로 자체가 달랐습니다. 통합 빌드로 얻는 이점보다, 각자 버전을 고정한 채 원할 때 올릴 수 있는 편이 이 조직에는 맞았습니다.</p>
+  <p>대신 배포를 자동화했습니다. git 태그를 밀면 GitHub Actions가 번들해 버전을 붙이고 퍼블리시합니다. 디자인 시스템은 별도 패키지로 분리했습니다. 시각 토큰과 도메인 시각화는 변경 주기가 다르니까요. Storybook을 구현의 단일 기준으로 두고 Figma로 디자이너와 맞췄습니다.</p>
+
+  <h3>설치 한 번으로 끝나게 만들기</h3>
+  <p>이 패키지는 WASM 커널과 전용 워커를 함께 씁니다. 평범하게 번들하면 쓰는 쪽이 wasm 바이너리와 glue 스크립트를 직접 서빙해야 합니다. 라이브러리 하나 쓰자고 배포 설정을 건드리게 되는 거죠.</p>
+  <p><strong>번들러 플러그인을 직접 만들었습니다.</strong> 빌드 시점에 워커 소스와 glue, wasm 바이너리를 하나로 합치고, 워커 생성 호출을 Blob 기반으로 치환합니다. 이제 설치만 하면 됩니다. 대가는 번들 340KB 증가입니다. 도입 비용을 줄이는 쪽이 낫다고 봤습니다.</p>
+
+  <h3>아홉 번의 메이저 버전</h3>
+  <p>지금 v9까지 왔습니다. 소비자가 여섯이면 깨지는 변경을 낼 때 "바뀌었습니다"만으로는 부족합니다. 시야각 볼륨의 거리 기준을 축 방향 높이에서 시선 거리로 바꿨을 때는, 기존 크기를 유지하려면 어떤 값을 넘겨야 하는지 계산식과 함께 공지했습니다. 받는 쪽이 바로 고칠 수 있어야 합니다.</p>
+</section>
+
+<section>
+  <h2>메인 스레드에서 5만 개를 계산하고 있었습니다</h2>
+  <p class="where">스페이스맵 · 실시간 렌더링 재설계</p>
+
+  <p>위성 궤도 전파(SGP4)를 메인 스레드에서 돌리고 있었습니다. 객체가 늘자 프레임이 끊겼고, 나중에는 화면 조작 자체가 먹지 않았습니다. 계산과 렌더링과 사용자 입력이 한 줄에 서 있었기 때문입니다.</p>
+
+  <h3>먼저 계측기를 만들었습니다</h3>
+  <p>어디가 느린지 짐작만으로는 알 수 없었습니다. 성능 측정 오버레이를 직접 만들어 프레임 시간과 구간별 비용을 화면에 띄웠습니다. 위에 있는 데모의 숫자판이 그때 만든 것과 같은 성격의 도구입니다. 이후의 모든 결정은 이 숫자를 보고 내렸습니다.</p>
+
+  <h3>계산을 옮기고, 주기를 끊었습니다</h3>
+  <p>SGP4 커널만 네이티브 라이브러리를 WebAssembly로 컴파일해 여러 Web Worker에 나눠 넣었습니다. 워커도 역할을 나눴습니다. 본체 전파를 분담하는 워커들과 별개로, 궤도선 샘플링만 맡는 워커를 따로 뒀습니다. 궤도선 계산이 길어져도 본체 갱신이 막히지 않게요. 여기서 한 걸음 더 갔습니다. 워커가 좌표만 돌려주면 메인 스레드가 다시 행렬을 만들어야 하니, <strong>4×4 변환행렬까지 워커에서 만들어 SharedArrayBuffer에 직접 씁니다.</strong> 메인 스레드는 복사 없이 읽기만 합니다.</p>
+  <p>그다음은 주기 분리였습니다. 궤도는 초당 60번 다시 계산할 필요가 없습니다. 워커 틱 사이를 케플러 전개로 보간해 <strong>계산 주기와 렌더 주기를 떼어놨습니다.</strong> 계산을 덜 해도 화면은 부드럽습니다.</p>
+  <p>보간을 얼마나 멀리까지 허용할지는 오차를 계산해서 정했습니다. 100초 앞은 약 1미터, 300초 앞은 약 4km, 600초 앞은 80km까지 벌어집니다. 그래서 300초를 상한으로 잡았습니다. 상한을 넘을 때 보간을 0으로 되돌리면 점이 궤도를 따라 뒤로 튀는 게 한 프레임 보여서, 값을 고정하는 쪽을 택했습니다. <strong>눈에 보이는 것과 수치상 정확한 것이 다를 때가 있습니다.</strong></p>
+  <p>나머지는 세부 작업이었습니다. InstancedMesh로 드로우콜을 줄이고, 라벨 갱신은 30Hz에서 15Hz로 내렸습니다. 라벨 겹침 판정이 매 프레임 레이아웃을 건드리고 있어서 공유 rAF와 DOM diff 캐시, 공간 해시로 다시 짰습니다. WASM 힙이 새는 문제는 워커별 인스턴스 재활용과 버퍼 인덱스 할당자로 잡았습니다. 저사양 GPU에서는 품질을 자동으로 낮춥니다.</p>
+  <p>CPU 사용량이 약 20% 줄었습니다. 더 중요한 건 객체가 늘어도 조작이 막히지 않게 된 것이었습니다.</p>
+</section>
+
+<section>
+  <h2>기능은 있는데 아무도 찾지 못했습니다</h2>
+  <p class="where">스페이스맵 · LLM 기반 플랫폼 제어 <span class="dim">— 설계 완료, 도입 진행 중</span></p>
+
+  <p>궤도역학은 어렵습니다. 제품에 기능은 다 있는데, 사용자가 메뉴에서 그걸 찾지 못했습니다. UI를 더 잘 정리하는 방법도 있었지만, 도메인 자체의 난이도는 정리로 해결되지 않습니다. 그래서 자연어로 플랫폼을 조작하는 층을 설계했습니다.</p>
+
+  <h3>서버는 자동으로, 클라이언트는 손으로</h3>
+  <p>백엔드는 기존 API를 <strong>자동으로 툴로 노출</strong>합니다. 이미 스키마라는 계약이 있으니 툴 정의를 따로 관리할 이유가 없고, API가 늘어도 손댈 곳이 생기지 않습니다.</p>
+  <p>프론트엔드는 그렇게 할 수 없었습니다. 클라이언트 상태에는 계약이 없습니다. three.js 씬이나 필터 상태를 그대로 열면 내부 구현이 다시 외부 인터페이스가 되고, 리팩터링할 때마다 깨집니다. 그래서 <strong>LLM이 호출할 규약을 프론트엔드에 미리 정의했습니다.</strong> 조회만이 아니라 화면 상태 변경까지 이 규약을 거칩니다. LLM은 상태를 직접 만지지 않고, 정해진 전이만 호출합니다.</p>
+
+  <h3>규약을 세우려면 경로가 하나여야 했습니다</h3>
+  <p>여기서 예상하지 못한 일이 생겼습니다. 규약이 성립하려면 상태가 바뀔 때 데이터와 화면이 <strong>같은 경로로</strong> 따라온다는 보장이 있어야 합니다. 그런데 화면마다 데이터를 가져오는 방식과 그리는 방식이 제각각이었습니다. 그 상태로는 규약을 정의할 수가 없었습니다.</p>
+  <p>그래서 데이터 파이프라인과 렌더링 경로를 하나로 통합했습니다. AI 기능을 붙이려던 일이 프론트엔드 구조를 정리하는 일이 된 셈입니다. 지나고 보니 순서가 반대였어도 해야 할 작업이었습니다.</p>
+  <p>결과적으로 툴 표면이 둘로 갈렸습니다. 양쪽의 변경 비용과 안전성 요구가 다르기 때문입니다. 컴포넌트의 props를 좁힐 때와 같은 판단이었습니다. 안쪽을 감추고 경계만 연다는 것. 도구가 바뀌어도 판단해야 하는 지점은 같았습니다.</p>
+</section>
+
+<section>
+  <h2>경력</h2>
+  <table class="career">
+    <tr><td>2024.11 —</td><td><span class="co">스페이스맵</span> 개발팀 리드 · 과장</td><td>우주 상황인식 플랫폼</td></tr>
+    <tr><td>2023.04 – 24.06</td><td><span class="co">아이쉴드</span> 개발 총괄 · 과장</td><td>디지털 장의 서비스</td></tr>
+    <tr><td>2022.09 – 23.03</td><td><span class="co">퍼즐랩</span> 개발팀 팀장</td><td>광고 대행</td></tr>
+    <tr><td>2021.09 – 22.08</td><td><span class="co">레티튜</span> 개발 · 주임</td><td>대학 입학 컨설팅</td></tr>
+    <tr><td>2018.08 – 21.08</td><td><span class="co">코데브</span> 개발 · 연구원</td><td>개발 외주</td></tr>
+  </table>
+  <p style="margin-top:26px" class="dim">TypeScript · React · Next.js · React Three Fiber · three.js · WebAssembly · Web Worker · rollup · GitHub Actions · Playwright · Storybook · Node.js · Python</p>
+</section>
+
+<footer>
+  <a href="https://github.com/did0824">GitHub</a>
+  <a href="mailto:did0824@naver.com">did0824@naver.com</a>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var canvas = document.getElementById('scene');
+  var elFps = document.getElementById('fps');
+  var elMs  = document.getElementById('ms');
+  var elCnt = document.getElementById('cnt');
+  var elFallback = document.getElementById('fallback');
+
+  if(!window.THREE){
+    elFallback.innerHTML = '<span class="warn">3D 라이브러리를 불러오지 못했습니다.</span>';
+    return;
+  }
+
+  var COUNT = 12000;
+  var MODE  = 'main';
+  var GEN   = 0;
+
+  // ---------- renderer ----------
+  var renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:false});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x0D1620, 1);
+
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(46, 1, 0.1, 400);
+  camera.position.set(0, 22, 62);
+  camera.lookAt(0,0,0);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  var key = new THREE.DirectionalLight(0xBFE7DC, 0.9);
+  key.position.set(30, 40, 25);
+  scene.add(key);
+
+  // central body
+  var core = new THREE.Mesh(
+    new THREE.SphereGeometry(11, 48, 32),
+    new THREE.MeshStandardMaterial({color:0x1D3346, roughness:0.95, metalness:0.0})
+  );
+  scene.add(core);
+  var grid = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.SphereGeometry(11.06, 20, 12)),
+    new THREE.LineBasicMaterial({color:0x2C4A62})
+  );
+  scene.add(grid);
+
+  var geo = new THREE.SphereGeometry(0.16, 5, 4);
+  var mat = new THREE.MeshStandardMaterial({color:0x7FD4C1, roughness:0.5, emissive:0x1E4D43});
+  var mesh = null;
+
+  // ---------- orbital elements ----------
+  var elements = null;   // Float32Array, 5 per object
+  var matrices = null;   // Float32Array, 16 per object
+
+  function buildElements(n){
+    var e = new Float32Array(n*5);
+    for(var i=0;i<n;i++){
+      var o = i*5;
+      e[o]   = 14 + Math.random()*Math.random()*26;      // radius
+      e[o+1] = Math.random()*Math.PI*2;                   // phase
+      e[o+2] = (Math.random()-0.5)*Math.PI*1.15;          // inclination
+      e[o+3] = Math.random()*Math.PI*2;                   // node
+      e[o+4] = 0.30 + Math.random()*0.5;                  // rate
+    }
+    return e;
+  }
+
+  // Shared propagation source — used identically on main thread and in the worker.
+  var PROPAGATE = function(el, out, n, t){
+    for(var i=0;i<n;i++){
+      var o = i*5;
+      var r = el[o], ph = el[o+1], inc = el[o+2], nod = el[o+3], rate = el[o+4];
+      var a = ph + t*rate;
+
+      // deliberately non-trivial: a few correction iterations, as in a real propagator
+      var ecc = 0.055;
+      var E = a;
+      for(var k=0;k<4;k++){ E = E - (E - ecc*Math.sin(E) - a)/(1 - ecc*Math.cos(E)); }
+      var nu = E + ecc*Math.sin(E);
+
+      var xp = Math.cos(nu)*r, zp = Math.sin(nu)*r;
+      var ci = Math.cos(inc), si = Math.sin(inc);
+      var cn = Math.cos(nod), sn = Math.sin(nod);
+
+      var y1 = zp*si, z1 = zp*ci;
+      var x  = xp*cn - z1*sn;
+      var z  = xp*sn + z1*cn;
+
+      var m = i*16;
+      out[m]=1;    out[m+1]=0;  out[m+2]=0;  out[m+3]=0;
+      out[m+4]=0;  out[m+5]=1;  out[m+6]=0;  out[m+7]=0;
+      out[m+8]=0;  out[m+9]=0;  out[m+10]=1; out[m+11]=0;
+      out[m+12]=x; out[m+13]=y1;out[m+14]=z; out[m+15]=1;
+    }
+  };
+
+  // ---------- worker ----------
+  var worker = null, workerBusy = false, workerOk = true;
+
+  function makeWorker(){
+    var src =
+      'var PROPAGATE=' + PROPAGATE.toString() + ';\n' +
+      'self.onmessage=function(ev){\n' +
+      '  var d=ev.data;\n' +
+      '  PROPAGATE(d.el, d.out, d.n, d.t);\n' +
+      '  self.postMessage({out:d.out, el:d.el, gen:d.gen}, [d.out.buffer, d.el.buffer]);\n' +
+      '};';
+    try{
+      var url = URL.createObjectURL(new Blob([src], {type:'text/javascript'}));
+      var w = new Worker(url);
+      w.onmessage = function(ev){
+        workerBusy = false;
+        // 객체 수가 바뀐 뒤 도착한 이전 세대 결과는 버린다
+        if(ev.data.gen !== GEN) return;
+        matrices = ev.data.out;
+        elements = ev.data.el;
+      };
+      w.onerror = function(){ workerOk = false; workerBusy = false; setMode('main'); };
+      return w;
+    }catch(err){
+      workerOk = false;
+      return null;
+    }
+  }
+
+  // ---------- allocate ----------
+  function allocate(n){
+    COUNT = n;
+    GEN++;
+    if(mesh){ scene.remove(mesh); mesh.dispose && mesh.dispose(); }
+    mesh = new THREE.InstancedMesh(geo, mat, n);
+    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    scene.add(mesh);
+
+    elements = buildElements(n);
+    matrices = new Float32Array(n*16);
+    PROPAGATE(elements, matrices, n, 0);
+    workerBusy = false;
+    elCnt.textContent = n.toLocaleString('en-US');
+  }
+
+  function setMode(m){
+    MODE = m;
+    var btns = document.querySelectorAll('#segMode button');
+    for(var i=0;i<btns.length;i++){
+      btns[i].setAttribute('aria-pressed', btns[i].dataset.mode === m ? 'true' : 'false');
+    }
+    if(m === 'worker' && !worker){ worker = makeWorker(); }
+    if(m === 'worker' && !workerOk){
+      elFallback.innerHTML = '<span class="warn">이 브라우저에서는 워커를 쓸 수 없어 메인 스레드로 돌아갑니다.</span>';
+    }
+  }
+
+  // ---------- resize ----------
+  function resize(){
+    var w = canvas.clientWidth, h = canvas.clientHeight;
+    if(!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+
+  // ---------- loop ----------
+  var t = 0, last = performance.now(), acc = 0, frames = 0, smoothed = 0;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function frame(now){
+    requestAnimationFrame(frame);
+
+    var dt = Math.min((now - last)/1000, 0.1);
+    last = now;
+    if(!reduce) t += dt;
+
+    if(MODE === 'worker' && worker && workerOk){
+      if(!workerBusy && elements && matrices){
+        workerBusy = true;
+        var el = elements, out = matrices;
+        elements = null; matrices = null;
+        worker.postMessage({el:el, out:out, n:COUNT, t:t, gen:GEN}, [el.buffer, out.buffer]);
+      }
+    }else if(elements && matrices){
+      PROPAGATE(elements, matrices, COUNT, t);
+    }
+
+    if(matrices && mesh){
+      mesh.instanceMatrix.array.set(matrices);
+      mesh.instanceMatrix.needsUpdate = true;
+    }
+
+    core.rotation.y = t*0.06;
+    grid.rotation.y = t*0.06;
+    renderer.render(scene, camera);
+
+    // readout
+    frames++; acc += dt;
+    if(acc >= 0.45){
+      var fps = frames/acc;
+      smoothed = smoothed ? smoothed*0.55 + fps*0.45 : fps;
+      elFps.textContent = Math.round(smoothed);
+      elMs.textContent  = (1000/smoothed).toFixed(1);
+      frames = 0; acc = 0;
+    }
+  }
+
+  // ---------- controls ----------
+  document.getElementById('segCount').addEventListener('click', function(ev){
+    var b = ev.target.closest('button'); if(!b) return;
+    var btns = this.querySelectorAll('button');
+    for(var i=0;i<btns.length;i++) btns[i].setAttribute('aria-pressed','false');
+    b.setAttribute('aria-pressed','true');
+    allocate(parseInt(b.dataset.n, 10));
+  });
+
+  document.getElementById('segMode').addEventListener('click', function(ev){
+    var b = ev.target.closest('button'); if(!b) return;
+    setMode(b.dataset.mode);
+  });
+
+  resize();
+  allocate(COUNT);
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
