@@ -163,9 +163,9 @@
     font-size:25px;font-weight:600;letter-spacing:-0.015em;
     margin:0 0 6px;line-height:1.42;max-width:26ch;
   }
-  .where{
-    font-size:14px;color:var(--ink-soft);margin:0 0 26px;
-  }
+  /* 탭 제목은 바로 본문이 이어지므로 아래 여백을 늘린다. */
+  section.work > h2{margin:0 0 26px;max-width:30ch;}
+  section.work > h2 .dim{font-size:16px;font-weight:400;letter-spacing:0;}
   h3{
     font-size:15px;font-weight:600;margin:30px 0 6px;
   }
@@ -255,10 +255,8 @@
 
 
 <section class="work" id="lib" role="tabpanel" aria-labelledby="tab-lib">
-  <h2 lang="ko">같은 화면을 여섯 번 만들고 있었습니다</h2>
-  <h2 lang="en">We were building the same screen six times</h2>
-  <p class="where" lang="ko">사내 컴포넌트 라이브러리</p>
-  <p class="where" lang="en">Internal component library</p>
+  <h2 lang="ko">사내 컴포넌트 라이브러리</h2>
+  <h2 lang="en">Internal component library</h2>
 
   <p lang="ko">여섯 개 서비스가 각자 React Three Fiber 기반 위성 시각화 UI를 따로 구현하고 있었습니다. 같은 기능이 서비스마다 다르게 동작했고, 한 곳에서 고친 내용이 다른 곳으로 넘어가지 않았습니다. 버그 하나를 여섯 번 고치는 상황이었습니다.</p>
   <p lang="en">Six services each had their own React Three Fiber satellite visualization UI. The same feature behaved differently in every one of them, and a fix in one place never reached the others. Every bug had to be fixed six times.</p>
@@ -325,10 +323,8 @@
 </section>
 
 <section class="work" id="render" role="tabpanel" aria-labelledby="tab-render">
-  <h2 lang="ko">메인 스레드에서 5만 개를 계산하고 있었습니다</h2>
-  <h2 lang="en">We were propagating 50,000 objects on the main thread</h2>
-  <p class="where" lang="ko">실시간 렌더링 재설계</p>
-  <p class="where" lang="en">Real-time rendering redesign</p>
+  <h2 lang="ko">실시간 렌더링 재설계</h2>
+  <h2 lang="en">Real-time rendering redesign</h2>
 
   <p lang="ko">위성 궤도 전파(SGP4)를 메인 스레드에서 돌리고 있었습니다. 객체가 늘자 프레임이 끊기기 시작했고, 조금 더 올리면 화면 조작 자체가 먹지 않았습니다. 계산과 렌더링과 사용자 입력이 한 줄에 서 있었으니까요.</p>
   <p lang="en">Satellite orbit propagation (SGP4) was running on the main thread. As the object count grew the frame rate began to stutter, and a little higher the camera stopped responding at all &mdash; computation, rendering and user input were all standing in one line.</p>
@@ -389,10 +385,8 @@
 </section>
 
 <section class="work" id="llm" role="tabpanel" aria-labelledby="tab-llm">
-  <h2 lang="ko">기능은 있는데 아무도 찾지 못했습니다</h2>
-  <h2 lang="en">The features were there; nobody could find them</h2>
-  <p class="where" lang="ko">LLM 기반 플랫폼 제어 <span class="dim">— 설계 완료, 도입 진행 중</span></p>
-  <p class="where" lang="en">LLM-driven platform control <span class="dim">&mdash; designed, rollout in progress</span></p>
+  <h2 lang="ko">LLM 기반 플랫폼 제어 <span class="dim">— 설계 완료, 도입 진행 중</span></h2>
+  <h2 lang="en">LLM-driven platform control <span class="dim">&mdash; designed, rollout in progress</span></h2>
 
   <p lang="ko">궤도역학은 어렵습니다. 제품에 기능은 다 있는데, 사용자가 메뉴에서 그걸 찾지 못했습니다. UI를 더 잘 정리하는 방법도 있었지만, 도메인 자체의 난이도는 정리로 해결되지 않습니다. 그래서 자연어로 플랫폼을 조작하는 층을 설계했습니다.</p>
   <p lang="en">Orbital mechanics is hard. The product had every feature, and users still could not find them in the menus. Reorganizing the UI was one option, but tidying does not reduce the difficulty of the domain itself. So I designed a layer that drives the platform in natural language.</p>
